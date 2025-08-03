@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: moe-inference-system
+  namespace: production
+  labels:
+    app: moe-inference-system
+    tier: backend
+    environment: production
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: moe-inference-system
+    tier: backend

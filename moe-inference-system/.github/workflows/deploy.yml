@@ -1,0 +1,52 @@
+name: Deploy to Kubernetes
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Pipeline"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up kubectl
+      uses: azure/k8s-set-context@v3
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+    
+    - name: Deploy to Kubernetes
+      env:
+        DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+        VERSION: ${{ github.sha }}
+      run: |
+        # Deploy to production
+        cd kubernetes/production
+        
+        # Update image tag in deployment
+        sed -i "s|image:.*|image: ${DOCKER_REGISTRY}moe-inference-system:${VERSION}|" deployment.yaml
+        
+        # Apply Kubernetes manifests
+        kubectl apply -f configmap.yaml
+        kubectl apply -f deployment.yaml
+        kubectl apply -f service.yaml
+        
+        # Wait for rollout to complete
+        kubectl rollout status deployment/moe-inference-system -n production
+        
+        echo "Deployment completed successfully!"
+      
+    - name: Verify deployment
+      run: |
+        # Check if pods are running
+        kubectl get pods -n production -l app=moe-inference-system
+        
+        # Check service status
+        kubectl get svc -n production moe-inference-system

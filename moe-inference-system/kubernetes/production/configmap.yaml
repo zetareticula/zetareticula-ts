@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: moe-inference-system-config
+  namespace: production
+data:
+  NODE_ENV: production
+  PORT: "3000"
+  LOG_LEVEL: "info"
+  # Add other environment-specific configuration here

@@ -1,0 +1,86 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run Linter
+      run: npm run lint
+    
+    - name: Run TypeScript type checking
+      run: npx tsc --noEmit
+    
+    - name: Run Tests
+      run: npm test
+      env:
+        NODE_ENV: test
+
+  build:
+    name: Build
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build project
+      run: npm run build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: dist/
+        retention-days: 5
+
+  # Uncomment and configure the deployment job when you're ready to set up deployment
+  # deploy:
+  #   name: Deploy
+  #   needs: build
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   
+  #   - name: Download build artifacts
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: build
+  #       path: dist/
+  #   
+  #   # Add your deployment steps here
+  #   # Example: Deploy to Vercel, AWS, etc.
+  #   - name: Deploy to Production
+  #     run: |
+  #       echo "Add your deployment commands here"
+  #       # Example: npm run deploy
