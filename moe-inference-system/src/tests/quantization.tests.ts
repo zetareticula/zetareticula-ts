@@ -9,18 +9,18 @@ describe('MixedPrecisionQuantizer', () => {
     ];
     const configs = [
       {
-        technique: 'qlora',
-        bitDepth: 4,
-        mode: 'symmetric',
+        technique: 'qlora' as const,
+        bitDepth: 4 as const,
+        mode: 'symmetric' as const,
         blockSize: 4,
         loraRank: 8,
         loraCheckpoint: './lora_checkpoints/bart-lora-samsum/adapter_model.safetensors',
         qatEnabled: false,
       },
       {
-        technique: 'qat',
-        bitDepth: 8,
-        mode: 'asymmetric',
+        technique: 'qat' as const,
+        bitDepth: 8 as const,
+        mode: 'asymmetric' as const,
         blockSize: 4,
         loraRank: 8,
         loraCheckpoint: './lora_checkpoints/bart-lora-samsum/adapter_model.safetensors',

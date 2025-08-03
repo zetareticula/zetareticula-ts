@@ -56,7 +56,7 @@ export interface RLTransition {
   /** The action taken */
   action: RLAction;
   /** The reward received */
-  reward: number;
+  reward: RLReward | number;
   /** The next state after taking the action */
   nextState: RLState;
   /** Optional metadata about the transition */

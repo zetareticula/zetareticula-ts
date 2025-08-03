@@ -2,7 +2,7 @@ import { Expert, MoEInput } from './types';
 import { softmaxGating } from './gating';
 import { QLearning } from '../rl/q_learning';
 import { createLogger } from '../logger';
-import { RLState, BitDepth } from '../rl/types';
+import { RLState, BitDepth, RLReward } from '../rl/types';
 
 export class MoE {
   private experts: Expert[];
@@ -121,17 +121,38 @@ export class MoE {
     // In a real implementation, we would determine the action based on the bit depth change
     const action = { type: 'maintain' as const };
     
-    const reward = {
+    const reward: RLReward = {
       accuracy,
       latency,
-      tokenDrop
+      tokenDrop,
+      metadata: {
+        inferenceId,
+        timestamp: Date.now()
+      }
+    };
+
+    // Create a transition for the RL update
+    const transition = {
+      state,
+      action,
+      reward,
+      nextState: {
+        ...state,
+        context: {
+          ...state.context,
+          lastInferenceTime: Date.now(),
+          lastAccuracy: accuracy,
+          lastLatency: latency,
+          tokenDrop
+        }
+      }
     };
 
     try {
-      await this.qLearning.updateQTable(state, action, reward);
-      this.logger.debug('Updated Q-table', { inferenceId, state, action, reward });
+      await this.qLearning.update(transition);
+      this.logger.debug('Updated Q-learning model', { inferenceId, transition });
     } catch (error) {
-      this.logger.error('Failed to update Q-table', { 
+      this.logger.error('Failed to update Q-learning model', { 
         inferenceId, 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });

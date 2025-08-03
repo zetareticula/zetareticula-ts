@@ -21,7 +21,7 @@
       "@core/*": ["./src/core/*"],
       "@integration/*": ["./src/integration/*"]
     },
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "include": ["src/**/*", "types/**/*"],
   "typeRoots": ["./node_modules/@types", "./src/types"],

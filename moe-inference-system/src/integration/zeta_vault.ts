@@ -1,32 +1,45 @@
 import { MoE } from '../core/moe/expert';
-import { MixedPrecisionQuantizer } from '../core/quantization/mixed_precision';
+import { Expert, MoEInput } from '../core/moe/types';
+import { RLState, RLAction, BitDepth } from '../core/rl/types';
 import { QLearning } from '../core/rl/q_learning';
 import { DiskCache } from '../core/cache/disk_cache';
 import { SegQueue } from 'segqueue';
-import { Expert } from '../core/moe/types';
-import { MoEInput } from '../core/moe/types';
+
+declare module '../core/cache/disk_cache' {
+  interface DiskCache {
+    initialize?(): Promise<void>;
+    set<T>(key: string, value: T, ttl?: number): Promise<void>;
+    get<T>(key: string): Promise<T | undefined>;
+  }
+}
 
 export class ZetaVaultSynergy {
   private moe: MoE;
-  private quantizer: MixedPrecisionQuantizer;
+  // Quantizer is not currently used in the implementation
   private rl: QLearning;
   private cache: DiskCache;
   private queue: SegQueue<Expert>;
   private isInitialized: boolean = false;
 
-  constructor(moe: MoE, quantizer: MixedPrecisionQuantizer, rl: QLearning, cache: DiskCache) {
+  constructor(moe: MoE, rl: QLearning, cache: DiskCache) {
     this.moe = moe;
-    this.quantizer = quantizer;
     this.rl = rl;
     this.cache = cache;
-    this.queue = new SegQueue();
+    this.queue = new SegQueue<Expert>();
+    this.isInitialized = false;
     this.initialize();
+  }
+
+  private async initializeCache(): Promise<void> {
+    if (this.cache && typeof (this.cache as any).initialize === 'function') {
+      await (this.cache as any).initialize();
+    }
   }
 
   private async initialize(): Promise<void> {
     try {
       // Initialize components that need async setup
-      await this.cache.initialize();
+      await this.initializeCache();
       this.startQueueProcessing();
       this.isInitialized = true;
       console.log('ZetaVaultSynergy initialized successfully');
