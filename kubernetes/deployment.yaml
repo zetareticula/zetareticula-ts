@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moe-inference
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: moe-inference
+  template:
+    metadata:
+      labels:
+        app: moe-inference
+    spec:
+      containers:
+      - name: moe-inference
+        image: moe-inference:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
