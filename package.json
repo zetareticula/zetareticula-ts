@@ -1,18 +1,22 @@
 {
-    "name": "moe-inference-system",
-    "version": "1.0.0",
-    "scripts": {
-      "build": "tsc",
-      "start": "node dist/index.js",
-      "test": "jest"
-    },
-    "dependencies": {
-      "actix-web": "^4.0",
-      "segqueue": "^0.1"
-    },
-    "devDependencies": {
-      "@types/node": "^20.0",
-      "typescript": "^5.0",
-      "jest": "^29.0"
-    }
+  "name": "zetareticula-ts-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "moe-inference-system"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=moe-inference-system",
+    "start": "npm start --workspace=moe-inference-system",
+    "dev": "npm run dev --workspace=moe-inference-system",
+    "test": "npm test --workspace=moe-inference-system",
+    "lint": "npm run lint --workspace=moe-inference-system",
+    "format": "npm run format --workspace=moe-inference-system"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
+}

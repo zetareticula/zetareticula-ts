@@ -1,4 +1,4 @@
-import { BitDepth, QuantizationConfig, QuantizationTechnique } from './types';
+import { QuantizationConfig } from './types';
 import { Expert } from '../moe/types';
 
 // Extended quantization config with LoRA and QAT parameters
@@ -43,7 +43,8 @@ async function initWasmModule(): Promise<void> {
         memory: new WebAssembly.Memory({ initial: 256, maximum: 1024 }),
       },
     });
-    wasmModule = module.instance.exports as QuantizerWasmModule;
+    // Cast to unknown first, then to the target type to avoid TypeScript errors
+    wasmModule = module.instance.exports as unknown as QuantizerWasmModule;
   } catch (error) {
     console.error('Failed to initialize WebAssembly module:', error);
     throw new Error(`WebAssembly initialization failed: ${error}`);
