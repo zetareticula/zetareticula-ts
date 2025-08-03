@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.moe.autodeploy</string>
+
+    <!-- Run wrapper every 15 min -->
+    <key>StartInterval</key>
+    <integer>900</integer>
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/bash</string>
+      <string>/Users/xaxpmore/Documents/GitHub/zetareticula-ts/moe-inference-system/run-latest.sh</string>
+    </array>
+
+    <!-- Redirect stdout & stderr -->
+    <key>StandardOutPath</key>
+    <string>/tmp/moe-autodeploy.out</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/moe-autodeploy.err</string>
+
+    <!-- Run at login -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- KeepAlive is false; failures handled by wrapper rollback -->
+    <key>KeepAlive</key>
+    <false/>
+  </dict>
+</plist>

@@ -1,0 +1,64 @@
+---
+- name: Build and Test Zeta Reticula TS
+  hosts: localhost
+  connection: local
+  vars:
+    project_root: "{{ lookup('env', 'PWD') }}"
+    python_reqs:
+      - numpy
+      - pot
+      - scipy
+    node_version: "18.x"
+
+  tasks:
+    - name: Ensure Python dependencies are installed
+      pip:
+        name: "{{ python_reqs }}"
+        state: present
+      become: true
+
+    - name: Set up Node.js {{ node_version }}
+      block:
+        - name: Add NodeSource repository
+          shell: >
+            curl -fsSL https://deb.nodesource.com/setup_{{ node_version.split('.')[0] }}.x | sudo -E bash -
+          args:
+            creates: /etc/apt/sources.list.d/nodesource.list
+          become: true
+          when: ansible_os_family == 'Debian'
+
+        - name: Install Node.js and npm
+          package:
+            name: [nodejs, build-essential]
+            state: present
+          become: true
+
+    - name: Install npm dependencies
+      npm:
+        path: "{{ project_root }}
+        state: present
+        production: false
+
+    - name: Run TypeScript build
+      command: npm run build
+      args:
+        chdir: "{{ project_root }}"
+
+    - name: Run tests
+      command: npm test
+      args:
+        chdir: "{{ project_root }}"
+
+    - name: Build production package
+      command: npm run build:prod
+      args:
+        chdir: "{{ project_root }}"
+      when: "'build:prod' in (lookup('npm_scripts', project_root) | default({}))"
+
+    - name: Show build summary
+      debug:
+        msg: |
+          Build completed successfully!
+          - Node.js: {{ node_version }}
+          - Python dependencies: {{ python_reqs | join(', ') }}
+          - Project root: {{ project_root }}

@@ -12,9 +12,13 @@ rm -f package-lock.json
 echo "📦 Installing dependencies..."
 npm install
 
-# Build the application
-echo "🔨 Building the application..."
-npm run build
+# Build the application using default tsconfig to ensure node types are present
+echo "🔨 Building the application (default tsconfig)..."
+npx tsc -p tsconfig.json
+
+# Remove dev-dependencies for the runtime image
+echo "🧹 Pruning dev dependencies..."
+npm prune --production
 
 # Install only production dependencies for runtime
 echo "📦 Installing production dependencies..."

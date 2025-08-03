@@ -1,8 +1,56 @@
-# Mixture of Experts Inference System
+# Zeta Reticula TS
 
-A high-performance, scalable Mixture of Experts (MoE) inference system with dynamic bit-depth optimization.
+A hierarchical, energy-optimizing computational framework implementing a Mixture of Experts (MoE) architecture with cross-modal alignment capabilities.
 
-## Features
+## Key Features
+
+### Core Architecture
+- **Quantum-Inspired Computation**: Energy-efficient routing along minimal-dissipation cones
+- **Stochastic Exploration**: Lévy-flight based latent space navigation
+- **Adaptive Precision**: Dynamic bit-depth optimization based on hardware class
+
+### Cross-Modal Integration
+- **Unified Representation Space**: 768–6144D embeddings with topological preservation
+- **Semantic Alignment**: Gromov-Wasserstein and InfoNCE-based optimization
+- **Modality-Attentive Processing**: Multi-head attention with specialized attractors
+
+### Production Ready
+- Containerized deployment with Docker & Kubernetes
+- Comprehensive monitoring and metrics
+- Type-safe implementation in TypeScript
+
+## Architecture Overview
+
+Our system implements a hierarchical conical computational model that unifies principles from quantum physics, biological systems, and modern deep learning:
+
+```
+┌───────────────────────────────────────────────┐
+│          Cross-Modal Semantic Space           │
+│  (Hyperbolic Concept Lattices & Attractors)  │
+└───────────────────────┬───────────────────────┘
+                        │
+┌───────────────────────▼───────────────────────┐
+│          Multi-Head Attention Layer           │
+│  (Magic Matrix & Energy-Based Routing)       │
+└───────────────────────┬───────────────────────┘
+                        │
+┌───────────────────────▼───────────────────────┐
+│          High-Dimensional Embeddings          │
+│  (768–6144D Vectors with Topological Priors)  │
+└───────────────────────┬───────────────────────┘
+                        │
+┌───────────────────────▼───────────────────────┐
+│          Stochastic Foraging Engine           │
+│  (Lévy Flights & Adaptive Exploration)       │
+└───────────────────────┬───────────────────────┘
+                        │
+┌───────────────────────▼───────────────────────┐
+│       Quantum-Coherent Dissipation Layer      │
+│  (Minimal-Action Computation Routing)        │
+└───────────────────────────────────────────────┘
+```
+
+For detailed architecture documentation, see [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 - Dynamic expert routing with softmax gating
 - Adaptive bit-depth optimization based on hardware class
