@@ -91,7 +91,10 @@ export async function invokeRustQuantizer({
     }
 
     // Flatten weights for WebAssembly
-    const flatWeights = Float32Array.from(weights.flat());
+    const flatWeights = new Float32Array(weights.length * weights[0].length);
+    for (let i = 0; i < weights.length; i++) {
+      flatWeights.set(weights[i], i * weights[0].length);
+    }
     const results: Float32Array[] = [];
 
     // Process each batch
